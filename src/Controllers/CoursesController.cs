@@ -1,21 +1,22 @@
+using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using src.Model.Services.Application;
+using src.Models.ViewModels;
 
 namespace src.Controllers
 {
     public class CoursesController : Controller
     {
         public IActionResult Index(){
-    
-            return View();
-        }
-        
+            var courseService = new CourseService();
+            List<CourseViewModel> lista = courseService.GetServices();
+            return View(lista);
+        } 
+
         public IActionResult Detail(string id){
     
             return View();
-        }
-
-        public IActionResult Search(string title){
-            return Content($"Hai cercato {title}");
         }
     }
 }
