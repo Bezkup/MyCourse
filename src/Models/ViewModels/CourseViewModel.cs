@@ -1,6 +1,6 @@
 using MyCourse.Models.ValueTypes;
 
-namespace src.Models.ViewModels
+namespace MyCourse.Models.ViewModels
 {
     public class CourseViewModel
     {

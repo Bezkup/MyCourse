@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace src
+namespace MyCourse
 {
     public class HomeController : Controller
     {

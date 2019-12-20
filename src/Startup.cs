@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using MyCourse.Models.Services.Application;
+using src.Models.Services.Application;
 
 namespace CorsoDotNet
 {
@@ -22,6 +24,8 @@ namespace CorsoDotNet
             .AddRazorRuntimeCompilation()
             #endif
             ;
+
+            services.AddTransient<ICourseService, CourseService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

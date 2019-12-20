@@ -1,22 +1,32 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using src.Model.Services.Application;
-using src.Models.ViewModels;
+using MyCourse.Models.Services.Application;
+using MyCourse.Models.ViewModels;
+using src.Models.Services.Application;
 
-namespace src.Controllers
+namespace MyCourse.Controllers
 {
     public class CoursesController : Controller
     {
+        private readonly ICourseService courseService;
+
+        public CoursesController(ICourseService courseService)
+        {
+            this.courseService = courseService;
+        }
         public IActionResult Index(){
-            var courseService = new CourseService();
-            List<CourseViewModel> lista = courseService.GetServices();
+            ViewData["Title"] = "Catalogo dei corsi";
+
+            List<CourseViewModel> lista = courseService.GetCourses();
             return View(lista);
         } 
 
-        public IActionResult Detail(string id){
-    
-            return View();
+        public IActionResult Detail(int id){
+            
+            CourseDetailViewModel viewModel = courseService.GetCourse(id);
+            ViewData["Title"] = viewModel.Title;
+            return View(viewModel);
         }
     }
 }
