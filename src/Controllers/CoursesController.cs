@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MyCourse.Models.ViewModels;
 using src.Models.Services.Application;
@@ -14,16 +15,16 @@ namespace MyCourse.Controllers
         {
             this.courseService = courseService;
         }
-        public IActionResult Index(){
+        public async Task<IActionResult> Index(){
             ViewData["Title"] = "Catalogo dei corsi";
 
-            List<CourseViewModel> lista = courseService.GetCourses();
+            List<CourseViewModel> lista = await courseService.GetCoursesAsync();
             return View(lista);
         } 
 
-        public IActionResult Detail(int id){
+        public async Task<IActionResult> Detail(int id){
             
-            CourseDetailViewModel viewModel = courseService.GetCourse(id);
+            CourseDetailViewModel viewModel = await courseService.GetCourseAsync(id);
             ViewData["Title"] = viewModel.Title;
             return View(viewModel);
         }

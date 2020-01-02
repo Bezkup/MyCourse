@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Threading.Tasks;
 using MyCourse.Models.ViewModel;
 using MyCourse.Models.ViewModels;
 using src.Models.Services.Infrastructure;
@@ -14,11 +15,11 @@ namespace src.Models.Services.Application
         public AdoNetCourseService(IDatabaseAccessor db){
             this.db = db;
         }
-        public CourseDetailViewModel GetCourse(int id)
+        public async Task<CourseDetailViewModel> GetCourseAsync(int id)
     {
             FormattableString query = $@"Select Id, Title, Description, ImagePath, Author, Rating, FullPrice_Amount, FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency FROM Courses WHERE Id={id}; SELECT Id, Title, Description, Duration FROM Lessons WHERE CourseId={id}";
 
-            DataSet dataSet = db.Query(query);
+            DataSet dataSet = await db.QueryAsync(query);
 
             //Course
             var courseTable = dataSet.Tables[0];
@@ -38,10 +39,10 @@ namespace src.Models.Services.Application
             return courseDetailViewModel;
         }
 
-        public List<CourseViewModel> GetCourses()
+        public async Task<List<CourseViewModel>> GetCoursesAsync()
         {
             FormattableString query = $@"SELECT Id, Title, ImagePath, Author, Rating, FullPrice_Amount, FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency  FROM Courses";
-            DataSet dataset = db.Query(query);
+            DataSet dataset = await db.QueryAsync(query);
             var dataTable = dataset.Tables[0];
             var courseList = new List<CourseViewModel>();
             foreach(DataRow courseRow in dataTable.Rows){
