@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using MyCourse.Models.Services.Application;
 using src.Models.Services.Application;
+using src.Models.Services.Infrastructure;
 
 namespace CorsoDotNet
 {
@@ -25,7 +25,8 @@ namespace CorsoDotNet
             #endif
             ;
 
-            services.AddTransient<ICourseService, CourseService>();
+            services.AddTransient<ICourseService, AdoNetCourseService>();
+            services.AddTransient<IDatabaseAccessor, SqliteDatabaseAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

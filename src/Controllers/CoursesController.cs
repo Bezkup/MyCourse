@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using MyCourse.Models.Services.Application;
 using MyCourse.Models.ViewModels;
 using src.Models.Services.Application;
 
