@@ -1,5 +1,6 @@
 using System;
 using System.Data;
+using CorsoDotNet.Models.Entities;
 using MyCourse.Models.Enums;
 using MyCourse.Models.ValueTypes;
 
@@ -33,6 +34,20 @@ namespace MyCourse.Models.ViewModels
                 Id = Convert.ToInt32(courseRow["Id"])
             };
             return courseViewModel;
+        }
+
+        internal static CourseViewModel FromEntity(Course course)
+        {
+            CourseViewModel viewModel = new CourseViewModel{
+                Id = course.Id,
+                Title = course.Title,
+                ImagePath = course.ImagePath,
+                Author = course.Author,
+                Rating = course.Rating,
+                CurrentPrice = course.CurrentPrice,
+                FullPrice = course.FullPrice
+            };
+            return viewModel;
         }
     }
 }

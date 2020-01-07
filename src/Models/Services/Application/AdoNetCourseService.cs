@@ -4,9 +4,9 @@ using System.Data;
 using System.Threading.Tasks;
 using MyCourse.Models.ViewModel;
 using MyCourse.Models.ViewModels;
-using src.Models.Services.Infrastructure;
+using MyCourse.Models.Services.Infrastructure;
 
-namespace src.Models.Services.Application
+namespace MyCourse.Models.Services.Application
 {
     public class AdoNetCourseService : ICourseService
     {

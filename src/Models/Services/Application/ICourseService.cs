@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MyCourse.Models.ViewModels;
 
-namespace src.Models.Services.Application
+namespace MyCourse.Models.Services.Application
 {
     public interface ICourseService
     {

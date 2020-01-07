@@ -7,9 +7,6 @@ namespace CorsoDotNet.Models.Services.Infrastructure
 {
     public partial class MyCourseDbContext : DbContext
     {
-        public MyCourseDbContext()
-        {
-        }
 
         public MyCourseDbContext(DbContextOptions<MyCourseDbContext> options)
             : base(options)
@@ -19,14 +16,14 @@ namespace CorsoDotNet.Models.Services.Infrastructure
         public virtual DbSet<Course> Courses { get; set; }
         public virtual DbSet<Lesson> Lessons { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlite("Data Source=Data/MyCourse.db");
-            }
-        }
+//         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+//         {
+//             if (!optionsBuilder.IsConfigured)
+//             {
+// // #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
+//                 optionsBuilder.UseSqlite("Data Source=Data/MyCourse.db");
+//             }
+//         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -34,7 +31,32 @@ namespace CorsoDotNet.Models.Services.Infrastructure
             {
                 entity.ToTable("Courses"); //superfluo se la tabella si chiama come la proprietà che espone
                 entity.HasKey(course => course.Id); //Superfluo se la proprietà si chiama Id oppure CoursesId
-                entity.OwnsOne(course => course.CurrentPrice);
+
+                //mapping owned types
+                entity.OwnsOne(course => course.CurrentPrice, builder =>{
+                    
+                    builder.Property(money => money.Currency)
+                    .HasConversion<string>()
+                    .HasColumnName("CurrentPrice_Currency");
+
+                    builder.Property(money => money.Amount).HasColumnName("CurrentPrice_Amount")
+                    .HasConversion<float>()
+                    .HasColumnName("CurrentPrice_Amount");
+                });
+
+                //mapping owned types
+                entity.OwnsOne(course => course.FullPrice, builder =>{
+                    builder.Property(money => money.Currency).HasConversion<string>();
+                    builder.Property(money => money.Amount).HasColumnName("FullPrice_Amount");
+                });
+
+
+                entity.HasMany(course => course.Lessons)
+                      .WithOne(lesson => lesson.Course)
+                      .HasForeignKey(lesson => lesson.CourseId); //superflua se la proprietà si chiama CourseId
+
+
+
                 #region Mapping generato automaticamente dal dotnet ef
                 /*
                 entity.Property(e => e.Id).ValueGeneratedNever();
@@ -81,7 +103,9 @@ namespace CorsoDotNet.Models.Services.Infrastructure
             });
 
             modelBuilder.Entity<Lesson>(entity =>
-            {
+            {   
+                entity.HasOne(lesson => lesson.Course)
+                      .WithMany(course => course.Lessons); 
                 #region Mapping generato automaticamente dal dotnet ef
                 /*entity.Property(e => e.Id).ValueGeneratedNever();
 

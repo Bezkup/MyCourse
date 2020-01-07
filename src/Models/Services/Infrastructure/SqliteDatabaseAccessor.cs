@@ -4,7 +4,7 @@ using System.Data;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 
-namespace src.Models.Services.Infrastructure
+namespace MyCourse.Models.Services.Infrastructure
 {
     public class SqliteDatabaseAccessor : IDatabaseAccessor
     {

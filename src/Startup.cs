@@ -2,13 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CorsoDotNet.Models.Services.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using src.Models.Services.Application;
-using src.Models.Services.Infrastructure;
+using MyCourse.Models.Services.Application;
+using MyCourse.Models.Services.Infrastructure;
 
 namespace CorsoDotNet
 {
@@ -25,8 +27,14 @@ namespace CorsoDotNet
             #endif
             ;
 
-            services.AddTransient<ICourseService, AdoNetCourseService>();
+            // services.AddTransient<ICourseService, AdoNetCourseService>();
+            services.AddTransient<ICourseService, EfCoreCourseService>();
             services.AddTransient<IDatabaseAccessor, SqliteDatabaseAccessor>();
+            // services.AddScoped<MyCourseDbContext>();
+            // services.AddDbContext<MyCourseDbContext>();
+            services.AddDbContextPool<MyCourseDbContext>(optionsBuilder => {
+                optionsBuilder.UseSqlite("Data Source=Data/MyCourse.db");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
