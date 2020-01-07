@@ -7,17 +7,26 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MyCourse.Models.Services.Application;
 using MyCourse.Models.Services.Infrastructure;
+using src.Models.Options;
 
 namespace CorsoDotNet
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+        
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews()
@@ -33,8 +42,13 @@ namespace CorsoDotNet
             // services.AddScoped<MyCourseDbContext>();
             // services.AddDbContext<MyCourseDbContext>();
             services.AddDbContextPool<MyCourseDbContext>(optionsBuilder => {
-                optionsBuilder.UseSqlite("Data Source=Data/MyCourse.db");
+                string connectionString = Configuration.GetSection("ConnectionString").GetValue<string>("Default");
+                optionsBuilder.UseSqlite(connectionString);
             });
+
+            //Options
+
+            services.Configure<ConnectionStringsOptions>(Configuration.GetSection("ConnectionStrings"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
