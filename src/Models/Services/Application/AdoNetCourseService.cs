@@ -5,18 +5,29 @@ using System.Threading.Tasks;
 using MyCourse.Models.ViewModel;
 using MyCourse.Models.ViewModels;
 using MyCourse.Models.Services.Infrastructure;
+using Microsoft.Extensions.Options;
+using src.Models.Options;
+using Microsoft.Extensions.Logging;
 
 namespace MyCourse.Models.Services.Application
 {
     public class AdoNetCourseService : ICourseService
     {
+        private readonly ILogger<AdoNetCourseService> logger;
         private readonly IDatabaseAccessor db;
 
-        public AdoNetCourseService(IDatabaseAccessor db){
+        public AdoNetCourseService(ILogger<AdoNetCourseService> logger, IDatabaseAccessor db, IOptionsMonitor<CoursesOptions> courseOptions){
+            this.logger = logger;
             this.db = db;
+            CourseOptions = courseOptions;
         }
+
+        public IOptionsMonitor<CoursesOptions> CourseOptions { get; }
+
         public async Task<CourseDetailViewModel> GetCourseAsync(int id)
     {
+
+            logger.LogInformation("Course {id} requested", id);
             FormattableString query = $@"Select Id, Title, Description, ImagePath, Author, Rating, FullPrice_Amount, FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency FROM Courses WHERE Id={id}; SELECT Id, Title, Description, Duration FROM Lessons WHERE CourseId={id}";
 
             DataSet dataSet = await db.QueryAsync(query);

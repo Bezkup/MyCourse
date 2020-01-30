@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using src.Models.Options;
 
@@ -10,8 +11,11 @@ namespace MyCourse.Models.Services.Infrastructure
 {
     public class SqliteDatabaseAccessor : IDatabaseAccessor
     {
-        public SqliteDatabaseAccessor(IOptionsMonitor<ConnectionStringsOptions> connectionStringsOption)
+        private readonly ILogger<SqliteDatabaseAccessor> logger;
+
+        public SqliteDatabaseAccessor(ILogger<SqliteDatabaseAccessor> logger, IOptionsMonitor<ConnectionStringsOptions> connectionStringsOption)
         {
+            this.logger = logger;
             ConnectionStringsOption = connectionStringsOption;
         }
 
@@ -19,7 +23,7 @@ namespace MyCourse.Models.Services.Infrastructure
 
         public async Task<DataSet> QueryAsync(FormattableString formattableQuery)
         {
-
+            logger.LogInformation(formattableQuery.Format, formattableQuery.GetArguments());
             var queryArguments = formattableQuery.GetArguments();
             var sqliteParameters = new List<SqliteParameter>();
 
