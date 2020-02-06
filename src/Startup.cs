@@ -13,6 +13,7 @@ using Microsoft.Extensions.Hosting;
 using MyCourse.Models.Services.Application;
 using MyCourse.Models.Services.Infrastructure;
 using src.Models.Options;
+using src.Models.Services.Application;
 
 namespace CorsoDotNet
 {
@@ -39,6 +40,7 @@ namespace CorsoDotNet
             // services.AddTransient<ICourseService, AdoNetCourseService>();
             services.AddTransient<ICourseService, EfCoreCourseService>();
             services.AddTransient<IDatabaseAccessor, SqliteDatabaseAccessor>();
+            services.AddTransient<IErrorViewSelectorService, ErrorViewSelectorService>();
             // services.AddScoped<MyCourseDbContext>();
             // services.AddDbContext<MyCourseDbContext>();
             services.AddDbContextPool<MyCourseDbContext>(optionsBuilder => {
@@ -64,7 +66,10 @@ namespace CorsoDotNet
                 app.UseDeveloperExceptionPage();
                 
             }
-
+            
+            else{
+                app.UseExceptionHandler("/Error"); 
+            }
             app.UseStaticFiles();
 
             app.UseRouting();
