@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using MyCourse.Models.ViewModels;
+using src.Models.ViewModels;
 
-namespace MyCourse.Models.Services.Application
+namespace src.Models.Services.Application
 {
     public interface ICourseService
     {

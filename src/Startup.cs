@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CorsoDotNet.Models.Services.Infrastructure;
+using src.Models.Services.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -10,12 +10,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using MyCourse.Models.Services.Application;
-using MyCourse.Models.Services.Infrastructure;
-using src.Models.Options;
 using src.Models.Services.Application;
+using src.Models.Services;
+using src.Models.Options;
+using Microsoft.Extensions.Caching.Memory;
 
-namespace CorsoDotNet
+namespace src
 {
     public class Startup
     {
@@ -41,6 +41,7 @@ namespace CorsoDotNet
             services.AddTransient<ICourseService, EfCoreCourseService>();
             services.AddTransient<IDatabaseAccessor, SqliteDatabaseAccessor>();
             services.AddTransient<IErrorViewSelectorService, ErrorViewSelectorService>();
+            services.AddTransient<ICachedCourseService, MemoryCacheCourseService>();
             // services.AddScoped<MyCourseDbContext>();
             // services.AddDbContext<MyCourseDbContext>();
             services.AddDbContextPool<MyCourseDbContext>(optionsBuilder => {
@@ -52,6 +53,7 @@ namespace CorsoDotNet
 
             services.Configure<ConnectionStringsOptions>(Configuration.GetSection("ConnectionStrings"));
             services.Configure<CoursesOptions>(Configuration.GetSection("Courses"));
+            services.Configure<MemoryCacheOptions>(Configuration.GetSection("MemoryCache"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

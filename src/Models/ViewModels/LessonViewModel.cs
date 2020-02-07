@@ -1,7 +1,8 @@
 using System;
 using System.Data;
+using src.Models.Entities;
 
-namespace MyCourse.Models.ViewModel
+namespace src.Models.ViewModel
 {
     public class LessonViewModel
     {
@@ -10,15 +11,5 @@ namespace MyCourse.Models.ViewModel
         public string Description { get; set; }
         public TimeSpan Duration { get; set; }
 
-        public static LessonViewModel FromDataRow(DataRow dataRow)
-        {
-            var lessonViewModel = new LessonViewModel {
-                Id = Convert.ToInt32(dataRow["Id"]),
-                Title = Convert.ToString(dataRow["Title"]),
-                Description = Convert.ToString(dataRow["Description"]),
-                Duration = TimeSpan.Parse(Convert.ToString(dataRow["Duration"])),
-            };
-            return lessonViewModel;
-        }
     }
 }

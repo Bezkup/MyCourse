@@ -1,17 +1,16 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using MyCourse.Models.ViewModels;
-using MyCourse.Models.Services.Application;
+using src.Models.ViewModels;
+using src.Models.Services.Application;
 
-namespace MyCourse.Controllers
+namespace src.Controllers
 {
     public class CoursesController : Controller
     {
-        private readonly ICourseService courseService;
+        private readonly ICachedCourseService courseService;
 
-        public CoursesController(ICourseService courseService)
+        public CoursesController(ICachedCourseService courseService)
         {
             this.courseService = courseService;
         }

@@ -1,4 +1,4 @@
-namespace MyCourse.Models.Enums
+namespace src.Models.Enums
 {
     public enum Currency
     {

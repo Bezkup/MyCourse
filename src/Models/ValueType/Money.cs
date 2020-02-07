@@ -1,7 +1,7 @@
 using System;
-using MyCourse.Models.Enums;
+using src.Models.Enums;
 
-namespace MyCourse.Models.ValueTypes
+namespace src.Models.ValueTypes
 {
     public class Money
     {

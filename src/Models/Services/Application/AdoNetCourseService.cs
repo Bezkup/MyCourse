@@ -2,21 +2,21 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
-using MyCourse.Models.ViewModel;
-using MyCourse.Models.ViewModels;
-using MyCourse.Models.Services.Infrastructure;
+using src.Models.ViewModels;
+using src.Models.Services.Infrastructure;
 using Microsoft.Extensions.Options;
 using src.Models.Options;
 using Microsoft.Extensions.Logging;
 using src.Models.Exceptions;
+using src.Models.ViewModel;
 
-namespace MyCourse.Models.Services.Application
+namespace src.Models.Services.Application
 {
     public class AdoNetCourseService : ICourseService
     {
         private readonly ILogger<AdoNetCourseService> logger;
         private readonly IDatabaseAccessor db;
-
+        private readonly IOptionsMonitor<CoursesOptions> coursesOptions;
         public AdoNetCourseService(ILogger<AdoNetCourseService> logger, IDatabaseAccessor db, IOptionsMonitor<CoursesOptions> courseOptions){
             this.logger = logger;
             this.db = db;
@@ -29,6 +29,7 @@ namespace MyCourse.Models.Services.Application
     {
 
             logger.LogInformation("Course {id} requested", id);
+
             FormattableString query = $@"Select Id, Title, Description, ImagePath, Author, Rating, FullPrice_Amount, FullPrice_Currency, CurrentPrice_Amount, CurrentPrice_Currency FROM Courses WHERE Id={id}; SELECT Id, Title, Description, Duration FROM Lessons WHERE CourseId={id}";
 
             DataSet dataSet = await db.QueryAsync(query);
@@ -40,12 +41,13 @@ namespace MyCourse.Models.Services.Application
                 throw new CourseNotFoundException(id);
             }
             var courseRow = courseTable.Rows[0];
-            var courseDetailViewModel = CourseDetailViewModel.FromDataRow(courseRow);
+            var courseDetailViewModel = CourseDetailViewService.FromDataRow(courseRow);
             
             //Course Lessons
             var lessonDataTable = dataSet.Tables[1];
+            
             foreach(DataRow lessonRow in lessonDataTable.Rows){
-                LessonViewModel lessonViewModel = LessonViewModel.FromDataRow(lessonRow);
+                LessonViewModel lessonViewModel = LessonViewService.FromDataRow(lessonRow);
                 courseDetailViewModel.Lessons.Add(lessonViewModel);
             }
             
@@ -59,7 +61,7 @@ namespace MyCourse.Models.Services.Application
             var dataTable = dataset.Tables[0];
             var courseList = new List<CourseViewModel>();
             foreach(DataRow courseRow in dataTable.Rows){
-                CourseViewModel course = CourseViewModel.FromDataRow(courseRow);
+                CourseViewModel course = CourseViewService.FromDataRow(courseRow);
                 courseList.Add(course);
             }
             return courseList;

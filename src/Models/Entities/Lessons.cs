@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CorsoDotNet.Models.Entities
+namespace src.Models.Entities
 {
     public partial class Lesson
     {

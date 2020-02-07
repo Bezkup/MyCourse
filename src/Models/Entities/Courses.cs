@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using MyCourse.Models.ValueTypes;
+using src.Models.ValueTypes;
 
-namespace CorsoDotNet.Models.Entities
+namespace src.Models.Entities
 {
     public partial class Course
     {
