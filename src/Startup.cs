@@ -14,6 +14,7 @@ using src.Models.Services.Application;
 using src.Models.Services;
 using src.Models.Options;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.AspNetCore.Mvc;
 
 namespace src
 {
@@ -30,6 +31,19 @@ namespace src
         
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddResponseCaching();
+
+            services.AddMvc(options => 
+            {   
+                var homeProfile = new CacheProfile();
+                // homeProfile.Duration = Configuration.GetValue<int>("ResponseCache:Home:Duration");
+                // homeProfile.Location = Configuration.GetValue<ResponseCacheLocation>("ResponseCache:Home:Location");
+                //homeProfile.VaryByQueryKeys = new string[] {"page"};
+                
+                Configuration.Bind("ResponseCache:Home", homeProfile);
+                options.CacheProfiles.Add("Home", homeProfile);
+            });
+
             services.AddControllersWithViews()
 
             #if DEBUG
@@ -41,7 +55,7 @@ namespace src
             services.AddTransient<ICourseService, EfCoreCourseService>();
             services.AddTransient<IDatabaseAccessor, SqliteDatabaseAccessor>();
             services.AddTransient<IErrorViewSelectorService, ErrorViewSelectorService>();
-            services.AddTransient<ICachedCourseService, MemoryCacheCourseService>();
+            services.AddTransient<ICachedCourseService, DistributedCacheCourseService>();
             // services.AddScoped<MyCourseDbContext>();
             // services.AddDbContext<MyCourseDbContext>();
             services.AddDbContextPool<MyCourseDbContext>(optionsBuilder => {
@@ -49,7 +63,15 @@ namespace src
                 optionsBuilder.UseSqlite(connectionString);
             });
 
+
+            #region Configurazione del servizio di cache distribuita
+
+            services.AddStackExchangeRedisCache(options =>
+            {
+                Configuration.Bind("DistributedCache:Redis", options);
+            });
             //Options
+            #endregion
 
             services.Configure<ConnectionStringsOptions>(Configuration.GetSection("ConnectionStrings"));
             services.Configure<CoursesOptions>(Configuration.GetSection("Courses"));
@@ -72,7 +94,10 @@ namespace src
             else{
                 app.UseExceptionHandler("/Error"); 
             }
+            
             app.UseStaticFiles();
+
+            app.UseResponseCaching();
 
             app.UseRouting();
 

@@ -20,7 +20,7 @@ namespace src.Models.Services.Application
         public Task<CourseDetailViewModel> GetCourseAsync(int id)
         {
             return memoryCache.GetOrCreateAsync($"Course{id}", cacheEntry =>{
-                cacheEntry.SetSize(1);
+                cacheEntry.SetSize(1); 
                 cacheEntry.SetAbsoluteExpiration(TimeSpan.FromSeconds(60));
                 return courseService.GetCourseAsync(id);
             });

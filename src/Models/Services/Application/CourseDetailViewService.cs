@@ -13,7 +13,7 @@ namespace src.Models.Services.Application
     public class CourseDetailViewService
     {
         public static new CourseDetailViewModel FromDataRow(DataRow courseRow){
-            var courseDetailViewModel = new CourseDetailViewModel{
+            return new CourseDetailViewModel{
                 Title = Convert.ToString(courseRow["Title"]),
                 Description = Convert.ToString(courseRow["Description"]),
                 Author = Convert.ToString(courseRow["Author"]),
@@ -30,7 +30,6 @@ namespace src.Models.Services.Application
                 Id = Convert.ToInt32(courseRow["Id"]),
                 Lessons = new List<LessonViewModel>()
             };
-            return courseDetailViewModel;
         }
 
         internal static new CourseDetailViewModel FromEntity(Course course)
